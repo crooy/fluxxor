@@ -1,6 +1,11 @@
-<div align="center">
-<img src="http://fluxxor.com/fluxxor.svg" height="350" alt="Fluxxor" title="Fluxxor">
-</div>
+Fork goals
+----------
+- remove lodash as much as possible and move to ES6/7 methods
+- move to a RxJs based architecture while keeping the current interface intact ( have code working on this tool)
+- do something to limit all the boilerplate for using a store with simple REST Get stuff.
+
+Old Readme:
+----------
 
 Fluxxor is a set of tools to aid in developing
 [React](http://facebook.github.io/react/) applications with the [Flux
