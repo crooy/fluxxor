@@ -18,7 +18,7 @@ module.exports = {
     "rules": {
         "space-after-keywords":0,
         "space-return-throw-case":0,
-        "no-empty-label":0,        
+        "no-empty-label":0,
         "no-console":[
           "warn"
         ],

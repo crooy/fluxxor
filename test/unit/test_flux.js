@@ -182,9 +182,23 @@ describe("Flux", () => {
     expect(() => {
       flux.addAction("a", "b", "c", function() { this.dispatch("action", {name: "a.b.c"}); });
     }).to.throw(/action.*a\.b.*already exists/);
+
+    flux.dispatcher.dispatch = sinon.spy();
+    flux.actions.a.b();
+    expect(flux.dispatcher.dispatch).to.have.been.calledWith({type: "action", payload: {name: "a.b"}});
+  });
+
+  it("does not allow replacing actions 2", () => {
+    const actions = {
+      a: {
+        b() { this.dispatch("action", {name: "a.b"}); }
+      }
+    };
+    const flux = new Fluxxor.Flux({}, actions);
+
     expect(() => {
       flux.addAction("a", "b", function() { this.dispatch("action", {name: "a.b.c"}); });
-    }).to.throw(/action.*a\.b.*exists/);
+    }).to.throw(/An action named a.b already exists/);
 
     flux.dispatcher.dispatch = sinon.spy();
     flux.actions.a.b();
