@@ -2,8 +2,7 @@ var webpack = require("webpack");
 
 module.exports = {
   cache: true,
-  entry: "./index.js",
-  sourceMapFilename: "fluxxor.js.map",
+  entry: "./index.js",  
   output: {
     path: __dirname + "/build",
     filename: "fluxxor.js",
@@ -14,7 +13,7 @@ module.exports = {
   module: {
     loaders: [
       { test: /\.less$/, loader: "style!css!less" },
-      { test: /\.js$/, exclude: /node_modules/, loader: "babel-loader" }
+      { test: /\.js$/, exclude: /node_modules/, loader: "babel-loader" },
       { test: /\.json$/, loader: "json" }
     ]
   }
