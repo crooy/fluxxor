@@ -15,10 +15,12 @@ module.exports = {
     "plugins": [
         "react"
     ],
-    "rules": {      
-        "quotes": [
-            "error",
-            "double"
+    "rules": {
+        "space-after-keywords":0,
+        "space-return-throw-case":0,
+        "no-empty-label":0,        
+        "no-console":[
+          "warn"
         ],
         "semi": [
             "error",

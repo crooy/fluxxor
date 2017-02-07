@@ -1,34 +1,33 @@
-var Fluxxor = require("../../"),
-    jsdom = require("jsdom");
+import Fluxxor from "../../";
+import jsdom from "jsdom";
+import chai from "chai";
+const expect = chai.expect;
 
-var chai = require("chai"),
-    expect = chai.expect;
-
-var Store = Fluxxor.createStore({
+const Store = Fluxxor.createStore({
   actions: {
     "ACTIVATE": "handleActivate",
     "LOAD_INITIAL_VALUE": "handleLoadInitialValue"
   },
 
-  initialize: function() {
+  initialize() {
     this.activated = false;
     this.value = null;
   },
 
-  handleActivate: function() {
+  handleActivate() {
     this.activated = true;
     this.emit("change");
   },
 
-  handleLoadInitialValue: function() {
+  handleLoadInitialValue() {
     this.value = "testing";
     this.emit("change");
   }
 });
 
-var actions = {
-  activate: function(callback) {
-    setTimeout(function() {
+const actions = {
+  activate(callback) {
+    setTimeout(() => {
       try {
         this.dispatch("ACTIVATE");
         callback();
@@ -39,20 +38,24 @@ var actions = {
           callback(ex);
         }
       }
-    }.bind(this));
+    });
   },
 
-  loadInitialValue: function() {
+  loadInitialValue() {
     this.dispatch("LOAD_INITIAL_VALUE");
   }
 };
 
-describe("Dispatch interceptor", function() {
-  var React, TestUtils;
-  var flux, App, ComponentA, ComponentB;
+describe("Dispatch interceptor", () => {
+  let React;
+  let TestUtils;
+  let flux;
+  let App;
+  let ComponentA;
+  let ComponentB;
 
-  beforeEach(function() {
-    var doc = jsdom.jsdom("<html><body></body></html>");
+  beforeEach(() => {
+    const doc = jsdom.jsdom("<html><body></body></html>");
     global.window = doc.defaultView;
     global.document = window.document;
     global.navigator = window.navigator;
@@ -65,17 +68,17 @@ describe("Dispatch interceptor", function() {
       displayName: "App",
       mixins: [Fluxxor.FluxMixin(React), Fluxxor.StoreWatchMixin("store")],
 
-      getStateFromFlux: function() {
+      getStateFromFlux() {
         return {
           activated: this.getFlux().store("store").activated
         };
       },
 
-      render: function() {
+      render() {
         return React.DOM.div({}, this.renderChild());
       },
 
-      renderChild: function() {
+      renderChild() {
         if (!this.state.activated) {
           return ComponentA();
         } else {
@@ -90,7 +93,7 @@ describe("Dispatch interceptor", function() {
         Fluxxor.FluxMixin(React)
       ],
 
-      render: function() {
+      render() {
         return React.DOM.div();
       }
     }));
@@ -102,84 +105,84 @@ describe("Dispatch interceptor", function() {
         Fluxxor.StoreWatchMixin("store")
       ],
 
-      getStateFromFlux: function() {
+      getStateFromFlux() {
         return {
           value: this.getFlux().store("store").value
         };
       },
 
-      componentWillMount: function() {
+      componentWillMount() {
         this.getFlux().actions.loadInitialValue();
       },
 
-      render: function() {
+      render() {
         return React.DOM.div();
       },
     }));
   });
 
-  afterEach(function() {
+  afterEach(() => {
     delete global.window;
     delete global.document;
     delete global.navigator;
-    for (var i in require.cache) {
+    for (const i in require.cache) {
       if (require.cache.hasOwnProperty(i)) {
         delete require.cache[i]; // ugh react why
       }
     }
   });
 
-  it("doesn't intercept by default", function(done) {
+  it("doesn't intercept by default", done => {
     /* jshint expr:true */
     TestUtils.renderIntoDocument(App({flux: flux}));
-    flux.actions.activate(function(err) {
+    flux.actions.activate(err => {
       expect(err).to.match(/dispatch.*another action/);
       done();
     });
   });
 
-  it("allows intercepting", function(done) {
+  it("allows intercepting", done => {
     /* jshint expr:true */
-    flux.setDispatchInterceptor(function(action, dispatch) {
-      React.addons.batchedUpdates(function() {
+    flux.setDispatchInterceptor((action, dispatch) => {
+      React.addons.batchedUpdates(() => {
         dispatch(action);
       });
     });
 
     TestUtils.renderIntoDocument(App({flux: flux}));
-    flux.actions.activate(function(err) {
+    flux.actions.activate(err => {
       expect(err).to.be.undefined;
       done();
     });
   });
 
-  it("allows nested interceptors", function(done) {
-    var dispatches = 0;
+  it("allows nested interceptors", done => {
+    let dispatches = 0;
     /* jshint expr:true */
-    flux.setDispatchInterceptor(function(action, dispatch) {
+    flux.setDispatchInterceptor((action, dispatch) => {
       dispatches++;
-      React.addons.batchedUpdates(function() {
+      React.addons.batchedUpdates(() => {
         dispatch(action);
       });
     });
 
     TestUtils.renderIntoDocument(App({flux: flux}));
-    flux.actions.activate(function(err) {
+    flux.actions.activate(err => {
       expect(err).to.be.undefined;
       expect(dispatches).to.eql(2);
       done();
     });
   });
 
-  it("allows completely custom interceptors", function(done) {
-    var dispatches = 0;
+  it("allows completely custom interceptors", done => {
+    let dispatches = 0;
     /* jshint expr:true */
-    flux.setDispatchInterceptor(function() {
+    flux.setDispatchInterceptor(() => {
       dispatches++;
     });
 
     TestUtils.renderIntoDocument(App({flux: flux}));
-    flux.actions.activate(function(err) {
+    flux.actions.activate(err => {
       expect(err).to.be.defined;
       expect(dispatches).to.eql(1);
       done();

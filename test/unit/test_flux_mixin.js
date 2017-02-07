@@ -1,22 +1,21 @@
-var Fluxxor = require("../../"),
-    jsdom = require("jsdom");
-
-var chai = require("chai"),
-    expect = chai.expect;
+import Fluxxor from "../../";
+import jsdom from "jsdom";
+import chai from "chai";
+const expect = chai.expect;
 
 function createComponent(React, FluxMixin, FluxChildMixin) {
-  var Parent = React.createClass({
+  const Parent = React.createClass({
     displayName: "Parent",
     mixins: [FluxMixin],
 
-    render: function() {
+    render() {
       return React.createElement(Child);
     }
   });
 
   var Child = React.createClass({
     displayName: "Child",
-    render: function() {
+    render() {
       return React.createElement(Grandchild);
     }
   });
@@ -25,7 +24,7 @@ function createComponent(React, FluxMixin, FluxChildMixin) {
     displayName: "Grandchild",
     mixins: [FluxChildMixin],
 
-    render: function() {
+    render() {
       return React.createElement(GreatGrandchild);
     }
   });
@@ -34,7 +33,7 @@ function createComponent(React, FluxMixin, FluxChildMixin) {
     displayName: "GreatGrandchild",
     mixins: [FluxMixin],
 
-    render: function() {
+    render() {
       return React.DOM.div();
     }
   });
@@ -47,15 +46,23 @@ function createComponent(React, FluxMixin, FluxChildMixin) {
   };
 }
 
-describe("FluxMixin", function() {
-  var React, TestUtils, FluxMixin, FluxChildMixin;
-  var Parent, Child, Grandchild, GreatGrandchild, flux, objs;
+describe("FluxMixin", () => {
+  let React;
+  let TestUtils;
+  let FluxMixin;
+  let FluxChildMixin;
+  let Parent;
+  let Child;
+  let Grandchild;
+  let GreatGrandchild;
+  let flux;
+  let objs;
 
-  beforeEach(function() {
+  beforeEach(() => {
     console._warn = console.warn;
-    console.warn = function() {};
+    console.warn = () => {};
 
-    var doc = jsdom.jsdom('<html><body></body></html>');
+    const doc = jsdom.jsdom('<html><body></body></html>');
     global.window = doc.defaultView;
     global.document = window.document;
     global.navigator = window.navigator;
@@ -71,48 +78,48 @@ describe("FluxMixin", function() {
     flux = new Fluxxor.Flux({}, {});
   });
 
-  afterEach(function() {
+  afterEach(() => {
     delete global.window;
     delete global.document;
     delete global.navigator;
     console.warn = console._warn;
   });
 
-  it("passes flux via getFlux() to descendants who ask for it", function() {
+  it("passes flux via getFlux() to descendants who ask for it", () => {
     /* jshint expr:true */
-    var tree = TestUtils.renderIntoDocument(React.createElement(Parent, {flux: flux}));
+    const tree = TestUtils.renderIntoDocument(React.createElement(Parent, {flux: flux}));
     expect(tree.getFlux()).to.equal(flux);
-    var child = TestUtils.findRenderedComponentWithType(tree, Child);
+    const child = TestUtils.findRenderedComponentWithType(tree, Child);
     expect(child.getFlux).to.be.undefined;
-    var grandchild = TestUtils.findRenderedComponentWithType(tree, Grandchild);
+    const grandchild = TestUtils.findRenderedComponentWithType(tree, Grandchild);
     expect(grandchild.getFlux()).to.equal(flux);
-    var greatGrandchild = TestUtils.findRenderedComponentWithType(tree, GreatGrandchild);
+    const greatGrandchild = TestUtils.findRenderedComponentWithType(tree, GreatGrandchild);
     expect(greatGrandchild.getFlux()).to.equal(flux);
   });
 
-  it("throws when it can't find flux on the props or context", function() {
-    var Comp = React.createFactory(React.createClass({
+  it("throws when it can't find flux on the props or context", () => {
+    const Comp = React.createFactory(React.createClass({
       displayName: "TestComponent",
       mixins: [Fluxxor.FluxMixin(React)],
-      render: function() { return React.DOM.div(); }
+      render() { return React.DOM.div(); }
     }));
-    expect(function() {
+    expect(() => {
       React.renderToString(Comp());
     }).to.throw(/Could not find flux.*TestComponent/);
   });
 
-  it("throws when attempting to mix in the function directly", function() {
-    expect(function() {
+  it("throws when attempting to mix in the function directly", () => {
+    expect(() => {
       React.createClass({
         mixins: [Fluxxor.FluxMixin],
-        render: function() { return React.DOM.div(); }
+        render() { return React.DOM.div(); }
       });
     }).to.throw(/attempting to use a component class as a mixin/);
   });
 
-  it("gives a deprecation warning when using FluxChildMixin", function() {
-    var warned = false;
-    console.warn = function(text) {
+  it("gives a deprecation warning when using FluxChildMixin", () => {
+    let warned = false;
+    console.warn = text => {
       if (text.match(/FluxChildMixin.*CompName.*deprecated/)) {
         warned = true;
       } else {
@@ -120,20 +127,20 @@ describe("FluxMixin", function() {
       }
     };
 
-    var Comp = React.createFactory(React.createClass({
+    const Comp = React.createFactory(React.createClass({
       mixins: [Fluxxor.FluxChildMixin(React)],
       displayName: "CompName",
-      render: function() { return React.DOM.div(); }
+      render() { return React.DOM.div(); }
     }));
     React.renderToString(Comp());
     expect(warned).to.equal(true);
   });
 
-  it("throws when attempting to mix in the child function directly", function() {
-    expect(function() {
+  it("throws when attempting to mix in the child function directly", () => {
+    expect(() => {
       React.createClass({
         mixins: [Fluxxor.FluxChildMixin],
-        render: function() { return React.DOM.div(); }
+        render() { return React.DOM.div(); }
       });
     }).to.throw(/attempting to use a component class as a mixin/);
   });
