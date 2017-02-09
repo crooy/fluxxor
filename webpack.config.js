@@ -10,8 +10,7 @@ module.exports = {
     libraryTarget: "umd"
   },
   devtool: "source-map",
-  plugins:[
-    new webpack.optimize.DedupePlugin(),
+  plugins:[    
     new webpack.optimize.OccurrenceOrderPlugin()
   ],
   module: {
