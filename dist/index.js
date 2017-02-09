@@ -28,14 +28,16 @@ var _create_store = require("./lib/create_store");
 
 var _create_store2 = _interopRequireDefault(_create_store);
 
+var _store = require("./lib/store");
+
+var _store2 = _interopRequireDefault(_store);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var Fluxxor = {
   Dispatcher: _dispatcher2.default,
   Flux: _flux2.default,
-  FluxMixin: _flux_mixin2.default,
-  FluxChildMixin: _flux_child_mixin2.default,
-  StoreWatchMixin: _store_watch_mixin2.default,
+  Store: _store2.default,
   createStore: _create_store2.default,
   version: require("./version")
 };
