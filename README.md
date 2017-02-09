@@ -1,8 +1,6 @@
 Fork goals
 ----------
 - remove lodash as much as possible and move to ES6/7 methods
-- move to a RxJs based architecture while keeping the current interface intact ( have code working on this tool)
-- do something to limit all the boilerplate for using a store with simple REST Get stuff.
 
 Old Readme:
 ----------
@@ -31,54 +29,6 @@ Bower:
 
 More detailed installation instructions can be found on
 [the Fluxxor website](http://fluxxor.com/guides/installation.html).
-
-### Third Party Releases
-
-The following releases are maintained by third parties, and support inquiries should be directed to their maintainers.
-
-#### WebJar
-
-For JVM languages, there are [WebJar](http://www.webjars.org) packages available on Maven Central and jsDelivr as the following:
-
-SBT/Play Framework 2:
-
-```scala
-"org.webjars" % "fluxxor" % fluxxorVersion
-```
-
-Maven:
-
-```xml
-<dependency>
-    <groupId>org.webjars</groupId>
-    <artifactId>fluxxor</artifactId>
-    <version>${fluxxor.version}</version>
-</dependency>
-```
-
-For detailed instructions, refer to the [WebJars documentation](http://www.webjars.org/documentation). For update requests, open a pull request on the [Fluxxor WebJar repository on Github](https://github.com/webjars/fluxxor).
-
-Browser Compatibility
----------------------
-
-Fluxxor is compatible with any [ES5-compliant browser](http://kangax.github.io/compat-table/es5/) (IE 9+, FF 4+, Safari 5.1.4+, Chrome 19+, Opera 12.10+). You can use [es5-shim](https://github.com/es-shims/es5-shim) for other browsers.
-
-
-Documentation
--------------
-
-See [the Fluxxor website](http://fluxxor.com) for in-depth
-[documentation](http://fluxxor.com/documentation/),
-[installation instructions](http://fluxxor.com/guides/installation.html),
-[examples](http://fluxxor.com/examples/), and
-[a getting started guide](http://fluxxor.com/guides/quick-start.html).
-
-Support and Chat
-----------------
-
-Get help with and chat about Fluxxor [on Gitter](https://gitter.im/BinaryMuse/fluxxor).
-
-[![Gitter chat](https://badges.gitter.im/BinaryMuse/fluxxor.png)](https://gitter.im/BinaryMuse/fluxxor)
 
 License
 -------

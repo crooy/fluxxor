@@ -46,21 +46,11 @@
   },
   "dependencies": {
     "eventemitter3": "^2.0.2",
-    "lodash.clone": "^4.5.0",
-    "lodash.findkey": "^4.6.0",
-    "lodash.foreach": "^4.5.0",
-    "lodash.forown": "^4.4.0",
-    "lodash.intersection": "^4.4.0",
     "lodash.isfunction": "^3.0.8",
     "lodash.isobject": "^3.0.2",
     "lodash.isstring": "^4.0.1",
-    "lodash.keys": "^4.2.0",
-    "lodash.mapvalues": "^4.6.0",
-    "lodash.reduce": "^4.6.0",
-    "lodash.size": "^4.2.0",
-    "lodash.uniq": "^4.5.0",
     "object-path": "^0.11.3"
-  },
+  },  
   "jshintConfig": {
     "camelcase": true,
     "curly": true,
