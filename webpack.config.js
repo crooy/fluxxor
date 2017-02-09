@@ -2,7 +2,7 @@ var webpack = require("webpack");
 
 module.exports = {
   cache: true,
-  entry: "./index.js",  
+  entry: "./index.js",
   output: {
     path: __dirname + "/build",
     filename: "fluxxor.js",
@@ -10,6 +10,10 @@ module.exports = {
     libraryTarget: "umd"
   },
   devtool: "source-map",
+  plugins:[
+    new webpack.optimize.DedupePlugin(),
+    new webpack.optimize.OccurrenceOrderPlugin()
+  ],
   module: {
     loaders: [
       { test: /\.less$/, loader: "style!css!less" },
