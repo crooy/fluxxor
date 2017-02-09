@@ -6,9 +6,10 @@
     "type": "git",
     "url": "https://github.com/BinaryMuse/fluxxor.git"
   },
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
     "test": "npm run eslint && mocha --require babel-polyfill --compilers js:babel-register --recursive",
+    "prepublish":"gulp",
     "eslint": "eslint lib/ test/",
     "build": "./script/build-fluxxor"
   },
@@ -32,6 +33,8 @@
     "envify": "^1.2.1",
     "eslint": "^3.15.0",
     "eslint-plugin-react": "^6.9.0",
+    "gulp": "^3.9.1",
+    "gulp-babel": "^6.1.2",
     "jsdom": "~9.10.0",
     "json-loader": "^0.5.0",
     "less": "^2.7.2",
@@ -50,7 +53,7 @@
     "lodash.isobject": "^3.0.2",
     "lodash.isstring": "^4.0.1",
     "object-path": "^0.11.3"
-  },  
+  },
   "jshintConfig": {
     "camelcase": true,
     "curly": true,
