@@ -1,3 +1,10 @@
+
+Version 2.0.0
+=============
+
+* move to ES6 + Babel + webpack 2.0
+* less dependencies (less lodash etc,)
+
 Version 1.7.3
 =============
 

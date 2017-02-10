@@ -1,5 +1,5 @@
 {
-  "name": "flurx",
+  "name": "@withlocals/fluxxor",
   "version": "2.0.0",
   "description": "Flux architecture tools for React",
   "repository": {
@@ -48,7 +48,7 @@
     "webpack-dev-server": "^2.3.0"
   },
   "dependencies": {
-    "rxjs": "^5.1.0",    
+    "eventemitter3": "^2.0.2",
     "lodash.isfunction": "^3.0.8",
     "lodash.isobject": "^3.0.2",
     "lodash.isstring": "^4.0.1",
