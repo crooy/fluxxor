@@ -1,4 +1,4 @@
-import Fluxxor from "../../";
+import Fluxxor from "../../src";
 import chai from "chai";
 const expect = chai.expect;
 import sinon from "sinon";

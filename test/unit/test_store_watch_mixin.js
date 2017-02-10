@@ -1,4 +1,4 @@
-import Fluxxor from "../../";
+import Fluxxor from "../../src";
 const StoreWatchMixin = Fluxxor.StoreWatchMixin;
 import jsdom from "jsdom";
 import chai from "chai";

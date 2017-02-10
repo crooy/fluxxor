@@ -1,4 +1,4 @@
-import Fluxxor from "../../";
+import Fluxxor from "../../src";
 import jsdom from "jsdom";
 import chai from "chai";
 const expect = chai.expect;

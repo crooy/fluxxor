@@ -1,6 +1,6 @@
 {
-  "name": "fluxxor",
-  "version": "1.7.3",
+  "name": "flurx",
+  "version": "2.0.0",
   "description": "Flux architecture tools for React",
   "repository": {
     "type": "git",
@@ -48,7 +48,7 @@
     "webpack-dev-server": "^2.3.0"
   },
   "dependencies": {
-    "eventemitter3": "^2.0.2",
+    "rxjs": "^5.1.0",    
     "lodash.isfunction": "^3.0.8",
     "lodash.isobject": "^3.0.2",
     "lodash.isstring": "^4.0.1",

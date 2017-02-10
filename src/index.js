@@ -9,9 +9,12 @@ import Store from "./lib/store";
 const Fluxxor = {
   Dispatcher: Dispatcher,
   Flux: Flux,
+  FluxMixin: FluxMixin,
+  FluxChildMixin: FluxChildMixin,
+  StoreWatchMixin: StoreWatchMixin,
   Store: Store,
   createStore: createStore,
-  version: require("./version")
+  version: require("../package.json").version
 };
 
 export default Fluxxor;
