@@ -32,7 +32,8 @@ export class StringMapOfflineFirstStore extends LocalStorageMixin(Store){
 
     if (JSON.stringify(value) !== JSON.stringify(this.value.get(key))){
       //first update index
-      let index = new Set(this.getItem(this.cacheIndexKey));
+      let list = this.getItem(this.cacheIndexKey);
+      let index = Array.isArray(list) ? new Set(list) : new Set();
       index.add(key);
       this.setItem(this.cacheIndexKey, index.entries());
 
