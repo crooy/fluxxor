@@ -38,11 +38,17 @@ export class StringMapOfflineFirstStore extends LocalStorageMixin(Store){
 
       // now update key
       this.value.set(key, value);
-      this.setItem(this.cacheKey + key, this.value);
+      this.setItem(this.cacheKey + key, this.value.get(key));
 
       this.emit('change', key, value);
     }
   }
+  clear(){
+    let index = new Set(this.getItem(this.cacheIndexKey));
+    index.entries().forEach(k => localStorage.removeItem(this.cacheKey + k));
+    localStorage.removeItem(this.cacheIndexKey);
+  }
+
   get(key, orElse){
     console.log(`get key ${key}`);
     return this.value.get(key) || this.getItem(this.cacheKey + key) || orElse;
