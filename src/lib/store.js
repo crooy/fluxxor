@@ -4,7 +4,7 @@ import _isFunction from "lodash.isfunction";
 
 class Store extends EventEmitter{
   constructor() {
-    super();
+    super();    
     this.__actions__ = {};
   }
 

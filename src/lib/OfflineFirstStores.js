@@ -4,6 +4,7 @@ import Store from './store';
 export class SingleValueOfflineFirstStore extends LocalStorageMixin(Store){
   constructor(name){
     super(name);
+    this.name = name;
     this.isChanged = (a, b) => JSON.stringify(a) !== JSON.stringify(b);
 
     this.cacheKey = `${name}_cache`;
@@ -36,20 +37,22 @@ export class SingleValueOfflineFirstStore extends LocalStorageMixin(Store){
 export class StringMapOfflineFirstStore extends LocalStorageMixin(Store){
   constructor(name){
     super(name);
-    this.isChanged = (a, b) => a !== b ||  JSON.stringify(a) !== JSON.stringify(b);
+    this.name = name;
+    this.isChanged = (a, b) => JSON.stringify(a) !== JSON.stringify(b);
     this.cacheKey = `${name}_cache:`;
     this.cacheIndexKey = `${name}_Index_cache`;
-
     this.value = new Map();
+    console.log("new store created with name "+JSON.stringify(arguments))
   }
   set(key, value){
 
     if (this.isChanged(value, this.value.get(key))){
       this.value.set(key, value);
       this.emit('change', key, value);
-
+      console.log("should use cache key base "+this.name)
       setTimeout(()=>{
         // now update key
+        console.log("using cache key "+this.cacheKey+ key)
         this.setItem(this.cacheKey + key, this.value.get(key));
         this.emit('cacheChange', this.cacheKey + key);
       })
@@ -64,11 +67,13 @@ export class StringMapOfflineFirstStore extends LocalStorageMixin(Store){
     }
   }
 
-  get(key, orElse){
+  get(key){
     console.log(`get key ${key}`);
-    if (!this.value.get(key)){
-      this.loadFromStorage(key);
+    if (!this.value.has(key)){
+      console.log(`get key ${key} not in cache, finding in storage`);
+      let fromCache = this.getItem(this.cacheKey + key);
+      this.value.set(key, fromCache);
     }
-    return this.value.get(key) || orElse;
+    return this.value.get(key);
   }
 }
