@@ -1,26 +1,37 @@
-var fakeLocalStorage = new Map();
+export const fakeLocalStorage = new Map();
 
 const LocalStorageMixin = (Sup) => class extends Sup{
   constructor(){
     super();
+    if (!this.stateToString) throw new Error("missing stateToString(value)");
+    if (!this.stateFromString) throw new Error("missing stateFromString(value)");
   }
-  setItem(key, value){
+
+  stateToString(v){return JSON.stringify(v);}
+  stateFromString(v){return JSON.parse(v);}
+
+  setItem(key, value, serializer = this.stateToString){
     try{
-      localStorage.setItem(key, JSON.stringify(value));
+      localStorage.setItem(key, serializer(value));
     }catch(e1){
       try{
-        sessionStorage.setItem(key, JSON.stringify(value));
+        sessionStorage.setItem(key, serializer(value));
       }catch(e2){
         fakeLocalStorage.set(key, value);
       }
     }
   }
-  getItem(key){
+  removeItem(key){
+    localStorage.removeItem(key);
+    sessionStorage.removeItem(key);
+    fakeLocalStorage.delete(key);
+  }
+  getItem(key, deserializer = this.stateFromString){
     try{
-      return JSON.parse(localStorage.getItem(key));
+      return deserializer(localStorage.getItem(key));
     }catch(e1){
       try{
-        return JSON.parse(sessionStorage.getItem(key));
+        return deserializer(sessionStorage.getItem(key));
       }catch(e2){
         return fakeLocalStorage.get(key);
       }

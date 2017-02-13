@@ -4,15 +4,17 @@ import Store from './store';
 export class SingleValueOfflineFirstStore extends LocalStorageMixin(Store){
   constructor(name){
     super(name);
+    this.isChanged = (a, b) => a !== b ||  JSON.stringify(a) !== JSON.stringify(b);
+
     this.cacheKey = `${name}_cache`;
     this.loadFromStorage();
   }
   set(value){
-    if (JSON.stringify(value) !== JSON.stringify(this.value)){
+    if (this.isChanged(value,this.value)){
       this.value = value;
       setTimeout(()=>{
         this.setItem(this.cacheKey, value);
-        this.emit('cacheChange', key);
+        this.emit('cacheChange', this.cacheKey);
       })
       this.emit('change', value);
     }
@@ -20,7 +22,7 @@ export class SingleValueOfflineFirstStore extends LocalStorageMixin(Store){
 
   loadFromStorage(){
     let fromCache = this.getItem(this.cacheKey);
-    if (JSON.stringify(this.value) !== JSON.stringify(fromCache)){
+    if (this.isChanged(fromCache, this.value)){
       this.value = fromCache;
     }
   }
@@ -34,6 +36,7 @@ export class SingleValueOfflineFirstStore extends LocalStorageMixin(Store){
 export class StringMapOfflineFirstStore extends LocalStorageMixin(Store){
   constructor(name){
     super(name);
+    this.isChanged = (a, b) => a !== b ||  JSON.stringify(a) !== JSON.stringify(b);
     this.cacheKey = `${name}_cache:`;
     this.cacheIndexKey = `${name}_Index_cache`;
 
@@ -42,32 +45,33 @@ export class StringMapOfflineFirstStore extends LocalStorageMixin(Store){
   }
   set(key, value){
 
-    if (JSON.stringify(value) !== JSON.stringify(this.value.get(key))){
+    if (this.isChanged(value, this.value.get(key))){
+      this.value.set(key, value);
+      this.emit('change', key, value);
 
       setTimeout(()=>{
         //first update index
         let list = this.getItem(this.cacheIndexKey);
         let index = Array.isArray(list) ? new Set(list) : new Set();
         index.add(key);
-        this.setItem(this.cacheIndexKey, index.entries());
+        this.setItem(this.cacheIndexKey, index.entries(), JSON.stringify);
         // now update key
         this.setItem(this.cacheKey + key, this.value.get(key));
-        this.emit('cacheChange', key);
+        this.emit('cacheChange', this.cacheKey + key);
       })
-      this.value.set(key, value);
-      this.emit('change', key, value);
     }
   }
+
   clear(){
-    let index = new Set(this.getItem(this.cacheIndexKey));
+    let index = new Set(this.getItem(this.cacheIndexKey, JSON.stringify));
     index.entries().forEach(k => localStorage.removeItem(this.cacheKey + k));
-    localStorage.removeItem(this.cacheIndexKey);
+    this.removeItem(this.cacheIndexKey);
   }
 
   loadFromStorage(key){
     let fromCache = this.getItem(this.cacheKey + key);
     let fromMem = this.value.get(key);
-    if (JSON.stringify(fromMem) !== JSON.stringify(fromCache)){
+    if (this.isChanged(fromCache, this.value.get(fromMem))){
       this.value.set(key, fromCache);
     }
   }
