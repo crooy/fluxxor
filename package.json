@@ -1,6 +1,6 @@
 {
   "name": "@withlocals/fluxxor",
-  "version": "2.0.11",
+  "version": "2.0.15",
   "description": "Flux architecture tools for React",
   "repository": {
     "type": "git",

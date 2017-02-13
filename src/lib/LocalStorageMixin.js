@@ -8,7 +8,6 @@ const LocalStorageMixin = (Sup) => class extends Sup{
   }
 
   setItem(key, value){
-    console.log(`setItem  ${key} ${this.stateToString(value)} in localStorage`);
     try{
       localStorage.setItem(key, this.stateToString(value));
     }catch(e1){
@@ -28,8 +27,7 @@ const LocalStorageMixin = (Sup) => class extends Sup{
   }
   getItem(key){
     try{
-      let val = localStorage.getItem(key);
-      console.log(`found ${val} under ${key} in localStorage`);
+      let val = localStorage.getItem(key);      
       return this.stateFromString(val);
     }catch(e1){
       try{
