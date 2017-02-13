@@ -1,4 +1,4 @@
-Version 2.0.5
+Version 2.0.5 - 2.0.8
 =============
 * making localStorage work in a setTimeout in offlineFirststores
 * adding special cacheChange event for tab broadcast

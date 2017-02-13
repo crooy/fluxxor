@@ -10,12 +10,12 @@ const LocalStorageMixin = (Sup) => class extends Sup{
   stateToString(v){return JSON.stringify(v);}
   stateFromString(v){return JSON.parse(v);}
 
-  setItem(key, value, serializer = this.stateToString){
+  setItem(key, value){
     try{
-      localStorage.setItem(key, serializer(value));
+      localStorage.setItem(key, this.stateToString(value));
     }catch(e1){
       try{
-        sessionStorage.setItem(key, serializer(value));
+        sessionStorage.setItem(key, this.stateToString(value));
       }catch(e2){
         fakeLocalStorage.set(key, value);
       }
@@ -26,12 +26,12 @@ const LocalStorageMixin = (Sup) => class extends Sup{
     sessionStorage.removeItem(key);
     fakeLocalStorage.delete(key);
   }
-  getItem(key, deserializer = this.stateFromString){
+  getItem(key){
     try{
-      return deserializer(localStorage.getItem(key));
+      return this.stateFromString(localStorage.getItem(key));
     }catch(e1){
       try{
-        return deserializer(sessionStorage.getItem(key));
+        return this.stateFromString(sessionStorage.getItem(key));
       }catch(e2){
         return fakeLocalStorage.get(key);
       }

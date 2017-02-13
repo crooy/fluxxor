@@ -4,7 +4,7 @@ import Store from './store';
 export class SingleValueOfflineFirstStore extends LocalStorageMixin(Store){
   constructor(name){
     super(name);
-    this.isChanged = (a, b) => a !== b ||  JSON.stringify(a) !== JSON.stringify(b);
+    this.isChanged = (a, b) => JSON.stringify(a) !== JSON.stringify(b);
 
     this.cacheKey = `${name}_cache`;
     this.loadFromStorage();
@@ -41,7 +41,6 @@ export class StringMapOfflineFirstStore extends LocalStorageMixin(Store){
     this.cacheIndexKey = `${name}_Index_cache`;
 
     this.value = new Map();
-    let list = this.getItem(this.cacheIndexKey);
   }
   set(key, value){
 
@@ -50,22 +49,11 @@ export class StringMapOfflineFirstStore extends LocalStorageMixin(Store){
       this.emit('change', key, value);
 
       setTimeout(()=>{
-        //first update index
-        let list = this.getItem(this.cacheIndexKey);
-        let index = Array.isArray(list) ? new Set(list) : new Set();
-        index.add(key);
-        this.setItem(this.cacheIndexKey, index.entries(), JSON.stringify);
         // now update key
         this.setItem(this.cacheKey + key, this.value.get(key));
         this.emit('cacheChange', this.cacheKey + key);
       })
     }
-  }
-
-  clear(){
-    let index = new Set(this.getItem(this.cacheIndexKey, JSON.stringify));
-    index.entries().forEach(k => localStorage.removeItem(this.cacheKey + k));
-    this.removeItem(this.cacheIndexKey);
   }
 
   loadFromStorage(key){
