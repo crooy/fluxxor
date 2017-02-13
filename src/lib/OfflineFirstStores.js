@@ -5,17 +5,26 @@ export class SingleValueOfflineFirstStore extends LocalStorageMixin(Store){
   constructor(name){
     super(name);
     this.cacheKey = `${name}_cache`;
-    this.value = this.getItem(this.cacheKey);
+    this.loadFromStorage();
   }
   set(value){
     if (JSON.stringify(value) !== JSON.stringify(this.value)){
       this.value = value;
       setTimeout(()=>{
         this.setItem(this.cacheKey, value);
+        this.emit('cacheChange', key);
       })
       this.emit('change', value);
     }
   }
+
+  loadFromStorage(){
+    let fromCache = this.getItem(this.cacheKey);
+    if (JSON.stringify(this.value) !== JSON.stringify(fromCache)){
+      this.value = fromCache;
+    }
+  }
+
   get(){
     return this.value;
   }
@@ -29,6 +38,7 @@ export class StringMapOfflineFirstStore extends LocalStorageMixin(Store){
     this.cacheIndexKey = `${name}_Index_cache`;
 
     this.value = new Map();
+    let list = this.getItem(this.cacheIndexKey);
   }
   set(key, value){
 
@@ -42,8 +52,8 @@ export class StringMapOfflineFirstStore extends LocalStorageMixin(Store){
         this.setItem(this.cacheIndexKey, index.entries());
         // now update key
         this.setItem(this.cacheKey + key, this.value.get(key));
-      }
-
+        this.emit('cacheChange', key);
+      })
       this.value.set(key, value);
       this.emit('change', key, value);
     }
@@ -54,8 +64,19 @@ export class StringMapOfflineFirstStore extends LocalStorageMixin(Store){
     localStorage.removeItem(this.cacheIndexKey);
   }
 
+  loadFromStorage(key){
+    let fromCache = this.getItem(this.cacheKey + key);
+    let fromMem = this.value.get(key);
+    if (JSON.stringify(fromMem) !== JSON.stringify(fromCache)){
+      this.value.set(key, fromCache);
+    }
+  }
+
   get(key, orElse){
     console.log(`get key ${key}`);
-    return this.value.get(key) || this.getItem(this.cacheKey + key) || orElse;
+    if (!this.value.get(key)){
+      this.loadFromStorage(key);
+    }
+    return this.value.get(key) || orElse;
   }
 }
