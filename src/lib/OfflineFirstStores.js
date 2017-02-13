@@ -10,7 +10,9 @@ export class SingleValueOfflineFirstStore extends LocalStorageMixin(Store){
   set(value){
     if (JSON.stringify(value) !== JSON.stringify(this.value)){
       this.value = value;
-      this.setItem(this.cacheKey, value);
+      setTimeout(()=>{
+        this.setItem(this.cacheKey, value);
+      })
       this.emit('change', value);
     }
   }
@@ -31,16 +33,18 @@ export class StringMapOfflineFirstStore extends LocalStorageMixin(Store){
   set(key, value){
 
     if (JSON.stringify(value) !== JSON.stringify(this.value.get(key))){
-      //first update index
-      let list = this.getItem(this.cacheIndexKey);
-      let index = Array.isArray(list) ? new Set(list) : new Set();
-      index.add(key);
-      this.setItem(this.cacheIndexKey, index.entries());
 
-      // now update key
+      setTimeout(()=>{
+        //first update index
+        let list = this.getItem(this.cacheIndexKey);
+        let index = Array.isArray(list) ? new Set(list) : new Set();
+        index.add(key);
+        this.setItem(this.cacheIndexKey, index.entries());
+        // now update key
+        this.setItem(this.cacheKey + key, this.value.get(key));
+      }
+
       this.value.set(key, value);
-      this.setItem(this.cacheKey + key, this.value.get(key));
-
       this.emit('change', key, value);
     }
   }

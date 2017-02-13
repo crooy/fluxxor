@@ -1,4 +1,8 @@
-Version 2.0.1, 2.0.2
+Version 2.0.5
+=============
+* making localStorage work in a setTimeout in offlineFirststores
+
+Version 2.0.1-2.0.4
 =============
 * bugfix
 
